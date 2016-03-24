@@ -1,0 +1,95 @@
+---
+title: "datadict"
+output: html_document
+---
+
+#Constant variables
+
+**Archived**
+Deleted constant variable:  ind_var2_0 
+Deleted constant variable:  ind_var2 
+Deleted constant variable:  ind_var27_0 
+Deleted constant variable:  ind_var28_0 
+Deleted constant variable:  ind_var28 
+Deleted constant variable:  ind_var27 
+Deleted constant variable:  ind_var41 
+Deleted constant variable:  ind_var46_0 
+Deleted constant variable:  ind_var46 
+Deleted constant variable:  num_var27_0 
+Deleted constant variable:  num_var28_0 
+Deleted constant variable:  num_var28 
+Deleted constant variable:  num_var27 
+Deleted constant variable:  num_var41 
+Deleted constant variable:  num_var46_0 
+Deleted constant variable:  num_var46 
+Deleted constant variable:  saldo_var28 
+Deleted constant variable:  saldo_var27 
+Deleted constant variable:  saldo_var41 
+Deleted constant variable:  saldo_var46 
+Deleted constant variable:  imp_amort_var18_hace3 
+Deleted constant variable:  imp_amort_var34_hace3 
+Deleted constant variable:  imp_reemb_var13_hace3 
+Deleted constant variable:  imp_reemb_var33_hace3 
+Deleted constant variable:  imp_trasp_var17_out_hace3 
+Deleted constant variable:  imp_trasp_var33_out_hace3 
+Deleted constant variable:  num_var2_0_ult1 
+Deleted constant variable:  num_var2_ult1 
+Deleted constant variable:  num_reemb_var13_hace3 
+Deleted constant variable:  num_reemb_var33_hace3 
+Deleted constant variable:  num_trasp_var17_out_hace3 
+Deleted constant variable:  num_trasp_var33_out_hace3 
+Deleted constant variable:  saldo_var2_ult1 
+Deleted constant variable:  saldo_medio_var13_medio_hace3 
+
+```{r}
+dat_train <- read.csv("C:/Users/jingpingwong/Downloads/santander/train.csv", stringsAsFactors = FALSE)
+dat_test <- read.csv("C:/Users/jingpingwong/Downloads/santander/test.csv", stringsAsFactors = FALSE)
+
+dat_test$TARGET <- NA
+all_dat <- rbind(dat_train, dat_test)
+
+for (i in names(all_dat)[-1])
+{
+	if (is.integer(all_dat[, i]) & length(unique(all_dat[, i])) == 1) 
+	{
+			all_dat[, i] <- NULL
+			cat("Deleted constant variable: ", i, "\n")
+		 
+	}
+}
+```
+
+#Duplicate columns
+
+
+```{r}
+duplicated(lapply(all_dat, summary))
+all_dat <- all_dat[!duplicated(lapply(all_dat, summary))]
+```
+
+#Importance
+
+```{r}
+library(xgboost)
+library(dplyr)
+xgbmodel <- xgboost(data=dtrain, nrounds=500, max.depth=5, eta=0.01, maximize=T, params=param)
+Dimnames <- names(select(train, -ID, -TARGET))
+importance_matrix <- xgb.importance(Dimnames,model= xgbmodel)
+xgb.plot.importance(importance_matrix)
+```
+
+#Tuning
+
+Stepsize (eta) = 0.01 seems to be the best.
+max.depth = 5 seems to be the best.
+
+#Variables Recognition
+AGE = var15
+
+#New
+saldo_var13 only 2 values?
+delta variables with 9999999?
+var42 num
+num_ are ranges??
+var13 income?
+var17 financing product?
