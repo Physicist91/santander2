@@ -86,7 +86,7 @@ param <- list(objective = "binary:logistic",
 			        eval_metric = "auc",
               nthread=2,
 			        eta=0.02,
-			        max_depth=15,
+			        max_depth=7,
 			        colsample_bytree=0.7,
 			        subsample=0.7)
 
