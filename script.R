@@ -69,8 +69,8 @@ for(i in num_vars){
   colnames(temp) <- c(i, paste0(i, "_kevin"))
   temp[temp[, 2] == -1, 2] <- NA 
   all_dat <- merge(all_dat, temp, by=i)
+  all_dat[, i] <- NULL
 }
-
 
 ###############################################################################
 ############################## Model Training #################################
