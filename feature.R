@@ -1,5 +1,6 @@
 library(caret)
 library(dplyr)
+library(ROSE)
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
 # dat_test <- read.csv("../input/test.csv", stringsAsFactors = F)
@@ -25,7 +26,9 @@ for (i in names(all_dat)[-1])
 }
 
 #Removing duplicate columns
-all_dat <- all_dat[!duplicated(lapply(all_dat, summary))]
+temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
+cat(temp, sep="\n")
+all_dat <- all_dat[, !names(all_dat) %in% temp]
 
 #Removing highly correlated variables
 #This prevents overfitting
@@ -33,7 +36,7 @@ cor_v <- abs(cor(all_dat))
 diag(cor_v) <- 0
 cor_v[upper.tri(cor_v)] <- 0
 cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
-cat("Removing ", names(all_dat)[unique(cor_v$row)])
+cat(names(all_dat)[unique(cor_v$row)], sep="\n")
 all_dat <- all_dat[,-unique(cor_v$row)]
 
 #Standardize missing values
@@ -42,28 +45,23 @@ delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
 for(i in delta_vars){
   all_dat[all_dat[, i] == 9999999999, i] <- NA
 }
+all_dat[all_dat$var36 == 99, "var36"] <- NA
 
 #Renaming known variables
 all_dat <- rename(all_dat, age=var15)
 
-#Transforming age variable by one-hot-encoding
+#Transforming categorical variable by one-hot-encoding
+all_dat$var36 <- as.factor(all_dat$var36)
 all_dat$ageDiscrete <- as.factor(round(all_dat$age/10, 0))
-dummies <- dummyVars(~ ageDiscrete, data=all_dat)
+dummies <- dummyVars(~ ageDiscrete + var36, data=all_dat)
 ohe <- as.data.frame(predict(dummies, newdata=all_dat))
-all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete')], ohe)
-
-#Transforming '^num' vars to average response
-num_vars <- names(all_dat)[ grep('^num_var', names(all_dat))]
-num_vars
-for(i in num_vars){
-  temp <- aggregate(formula(paste0("TARGET ~ ", i)), data=all_dat, FUN=mean)
-  colnames(temp) <- c(i, paste0(i, "_kevin"))
-  temp[temp[, 2] == -1, 2] <- NA 
-  all_dat <- merge(all_dat, temp, by=i)
-  all_dat[, i] <- NULL
-}
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
 
 
 # Splitting the data for model
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
+
+#Synthetic data generation
+#train <- ROSE(TARGET ~ ., data=train[!names(train) == 'ID'], N=228060, seed=8888)$data
+
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]

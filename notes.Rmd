@@ -1,0 +1,116 @@
+---
+title: "Personal Notes"
+output: html_document
+---
+
+#Setting Up
+
+```{r}
+library(xgboost)
+library(caret)
+library(dplyr)
+```
+
+#Constant variables
+
+```{r}
+dat_train <- read.csv("~/santander2/train.csv", stringsAsFactors = FALSE)
+dat_test <- read.csv("~/santander2/test.csv", stringsAsFactors = FALSE)
+
+dat_test$TARGET <- -1
+all_dat <- rbind(dat_train, dat_test)
+count <- 0
+for (i in names(all_dat)[-1])
+{
+	if (is.integer(all_dat[, i]) & length(unique(all_dat[, i])) == 1) 
+	{
+			all_dat[, i] <- NULL
+			cat("Deleted constant variable: ", i, "\n")
+		  count <- count + 1
+	}
+}
+
+cat("Deleted ", count, " constant variables.")
+```
+
+#Duplicate columns
+
+```{r}
+temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
+cat(temp, sep="\n")
+all_dat <- all_dat[!duplicated(lapply(all_dat, summary))]
+cat("Deleted ", length(temp), " duplicated variables.")
+```
+
+#Correlated variables
+
+Note: this prevents overfitting
+
+```{r}
+cor_v <- abs(cor(all_dat))
+diag(cor_v) <- 0
+cor_v[upper.tri(cor_v)] <- 0
+cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
+cat(names(all_dat)[unique(cor_v$row)], sep="\n")
+all_dat <- all_dat[,-unique(cor_v$row)]
+cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
+```
+
+
+#Variables with missing values
+
+```{r}
+summary(all_dat$var3)
+summary(all_dat[,grep('delta', names(all_dat))])
+summary(all_dat$var36)
+```
+
+
+#Variables included in the model
+
+```{r}
+all_dat <- rename(all_dat, age=var15)
+names(all_dat)
+```
+
+#Variables that are categorical
+
+```{r}
+
+```
+
+#Importance
+
+```{r}
+param <- list(objective = "binary:logistic",
+              booster = "gbtree",
+			  eval_metric = "auc",
+              nthread=2,
+			  eta=0.02,
+			  max_depth=5,
+			  colsample_bytree=0.7,
+			  subsample=0.7)
+
+xgbmodel <- xgboost(data=as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
+                    label=train$TARGET,
+                    nrounds=300, maximize=T, params=param,
+                    missing=NA)
+Dimnames <- names(select(train, -ID, -TARGET))
+importance_matrix <- xgb.importance(Dimnames,model= xgbmodel)
+xgb.plot.importance(importance_matrix)
+```
+
+#Tuning
+
+Stepsize (eta) = 0.02 seems to be the best.
+
+max.depth = 5 seems to be the best.
+
+#Variables Recognition
+AGE = var15
+number of months = '^num_meses*'
+
+#New
+var42 num
+
+var17 financing product?
