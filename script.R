@@ -88,8 +88,8 @@ param <- list(objective = "binary:logistic",
               nthread=2,
 			        eta=0.02,
 			        max_depth=5,
-			        colsample_bytree=0.7,
-			        subsample=0.7)
+			        colsample_bytree=0.85,
+			        subsample=0.95)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),

@@ -1,6 +1,6 @@
 xgbmodel1 <- xgboost(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                      label=train$TARGET,
-                     nrounds = 310,
+                     nrounds = 400,
                      verbose=2,
                      maximize = T,
                      missing=NA,
@@ -9,13 +9,13 @@ xgbmodel1 <- xgboost(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET
                      eval_metric = "auc",
                      nthread=2,
                      eta=0.02,
-                     max_depth=5,
+                     max_depth=7,
                      colsample_bytree=0.7,
                      subsample=0.7)
 
 xgbmodel2 <- xgboost(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                      label=train$TARGET,
-                     nrounds = 310,
+                     nrounds = 400,
                      verbose=2,
                      maximize = T,
                      missing=NA,
@@ -24,7 +24,7 @@ xgbmodel2 <- xgboost(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET
                      eval_metric = "auc",
                      nthread=2,
                      eta=0.02,
-                     max_depth=5,
+                     max_depth=7,
                      colsample_bytree=0.85,
                      subsample=0.95)
 
