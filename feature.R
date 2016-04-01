@@ -52,10 +52,10 @@ all_dat <- rename(all_dat, age=var15)
 
 #Transforming categorical variable by one-hot-encoding
 all_dat$var36 <- as.factor(all_dat$var36)
-all_dat$ageDiscrete <- as.factor(round(all_dat$age/10, 0))
-dummies <- dummyVars(~ ageDiscrete + var36, data=all_dat)
+all_dat$age <- as.factor(all_dat$age)
+dummies <- dummyVars(~ age + var36, data=all_dat)
 ohe <- as.data.frame(predict(dummies, newdata=all_dat))
-all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('age', 'var36')], ohe)
 
 
 # Splitting the data for model

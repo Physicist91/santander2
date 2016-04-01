@@ -14,8 +14,8 @@ library(dplyr)
 #Constant variables
 
 ```{r}
-dat_train <- read.csv("~/santander2/train.csv", stringsAsFactors = FALSE)
-dat_test <- read.csv("~/santander2/test.csv", stringsAsFactors = FALSE)
+dat_train <- read.csv("train.csv", stringsAsFactors = FALSE)
+dat_test <- read.csv("test.csv", stringsAsFactors = FALSE)
 
 dat_test$TARGET <- -1
 all_dat <- rbind(dat_train, dat_test)
@@ -60,24 +60,37 @@ cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
 #Variables with missing values
 
 ```{r}
-summary(all_dat$var3)
-summary(all_dat[,grep('delta', names(all_dat))])
-summary(all_dat$var36)
+boxplot(all_dat$var3)
+boxplot(all_dat[,grep('delta', names(all_dat))])
+boxplot(all_dat$var36)
 ```
 
+# multi-class variables
+
+```{r}
+barplot(table(all_dat$var36))
+```
+
+# binary variables
+```{r}
+for(i in grep('^ind_', names(all_dat)) ){
+    print(table(all_dat[, i]))
+}
+
+```
 
 #Variables included in the model
 
 ```{r}
 all_dat <- rename(all_dat, age=var15)
 names(all_dat)
+
+train <- all_dat[all_dat$ID %in% dat_train$ID, ]
+
+test <- all_dat[all_dat$ID %in% dat_test$ID, ]
+
 ```
 
-#Variables that are categorical
-
-```{r}
-
-```
 
 #Importance
 
@@ -94,10 +107,17 @@ param <- list(objective = "binary:logistic",
 xgbmodel <- xgboost(data=as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                     label=train$TARGET,
                     nrounds=300, maximize=T, params=param,
-                    missing=NA)
+                    missing=NA, verbose=0)
 Dimnames <- names(select(train, -ID, -TARGET))
 importance_matrix <- xgb.importance(Dimnames,model= xgbmodel)
-xgb.plot.importance(importance_matrix)
+
+importance_matrix
+```
+
+Age is the most important 
+```{r}
+library(ggplot2)
+qplot(age, data=train, colour=as.factor(TARGET), geom='density')
 ```
 
 #Tuning
@@ -108,9 +128,9 @@ max.depth = 5 seems to be the best.
 
 #Variables Recognition
 AGE = var15
+
 number of months = '^num_meses*'
 
 #New
-var42 num
 
 var17 financing product?
