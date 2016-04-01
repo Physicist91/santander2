@@ -1,3 +1,4 @@
+install.packages('xgboost', repos='http://cran.us.r-project.org')
 library(xgboost)
 
 
