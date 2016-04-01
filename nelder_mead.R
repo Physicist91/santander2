@@ -1,10 +1,13 @@
+install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
 
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
 
-library("Matrix")
+library("Matrix", lib.loc = "~/")
 
 dat.set1 <- train[,-1]
 #dat_sparse = model.matrix(TARGET~.-1, data = dat.set1, sparse = TRUE) #
@@ -18,8 +21,8 @@ dat_y = as.numeric(dat.set1[,"TARGET"])
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
 
-library("xgboost")
-library(dplyr)
+library("xgboost", lib.loc = "~/")
+library(dplyr, lib.loc = "~/")
 
 set.seed(7157)
 k <- 1
