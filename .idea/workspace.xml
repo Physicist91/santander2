@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="569d790d-f5a2-4875-9b18-1c4881556b63" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/master.R" afterPath="$PROJECT_DIR$/master.R" />
-    </list>
+    <list default="true" id="569d790d-f5a2-4875-9b18-1c4881556b63" name="Default" comment="" />
     <ignored path="santander2.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -303,12 +301,12 @@
       <option name="number" value="Default" />
       <updated>1459539220424</updated>
       <workItem from="1459539221757" duration="758000" />
-      <workItem from="1459540584753" duration="1603000" />
+      <workItem from="1459540584753" duration="1704000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2361000" />
+    <option name="totallyTimeSpent" value="2462000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="705" extended-state="6" />
