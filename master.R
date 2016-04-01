@@ -2,9 +2,9 @@ install.packages('caret', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('ROSE', repos='http://cran.us.r-project.org', lib= "~/")
 
-library(caret)
-library(dplyr)
-library(ROSE)
+library(caret, lib.loc = "~/")
+library(dplyr, lib.loc = "~/")
+library(ROSE, lib.loc = "~/")
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
 # dat_test <- read.csv("../input/test.csv", stringsAsFactors = F)

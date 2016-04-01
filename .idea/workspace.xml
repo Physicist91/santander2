@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="569d790d-f5a2-4875-9b18-1c4881556b63" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crazy_xgboost.R" afterPath="$PROJECT_DIR$/crazy_xgboost.R" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feature.R" afterPath="$PROJECT_DIR$/feature.R" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/master.R" afterPath="$PROJECT_DIR$/master.R" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nelder_mead.R" afterPath="$PROJECT_DIR$/nelder_mead.R" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rf.R" afterPath="$PROJECT_DIR$/rf.R" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xgboost.R" afterPath="$PROJECT_DIR$/xgboost.R" />
     </list>
     <ignored path="santander2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tuning.R" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tuning.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tuning.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -79,11 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="master.R" pinned="false" current-in-tab="false">
+      <file leaf-file-name="master.R" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/master.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="72" selection-start-line="0" selection-start-column="72" selection-end-line="0" selection-end-column="72" />
+            <state vertical-scroll-proportion="0.103270225">
+              <caret line="4" column="29" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -133,11 +128,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/rf.R" />
-        <option value="$PROJECT_DIR$/master.R" />
         <option value="$PROJECT_DIR$/crazy_xgboost.R" />
         <option value="$PROJECT_DIR$/feature.R" />
         <option value="$PROJECT_DIR$/nelder_mead.R" />
         <option value="$PROJECT_DIR$/xgboost.R" />
+        <option value="$PROJECT_DIR$/master.R" />
       </list>
     </option>
   </component>
@@ -308,16 +303,16 @@
       <option name="number" value="Default" />
       <updated>1459539220424</updated>
       <workItem from="1459539221757" duration="758000" />
-      <workItem from="1459540584753" duration="921000" />
+      <workItem from="1459540584753" duration="1603000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1679000" />
+    <option name="totallyTimeSpent" value="2361000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="705" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -327,7 +322,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -407,14 +402,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/master.R">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="72" selection-start-line="0" selection-start-column="72" selection-end-line="0" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/crazy_xgboost.R">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.037037">
@@ -475,6 +462,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/master.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.103270225">
+          <caret line="4" column="29" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="29" />
           <folding />
         </state>
       </provider>
