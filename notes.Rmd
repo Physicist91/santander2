@@ -120,6 +120,14 @@ library(ggplot2)
 qplot(age, data=train, colour=as.factor(TARGET), geom='density')
 ```
 
+saldo_var_30 is also very important
+
+```{r}
+qplot(saldo_var30, data=data, color=as.factor(ind_var30), geom='histogram')
+qplot(num_var30_0, data=data, color=as.factor(ind_var30_0), geom='histogram')
+
+```
+
 #Tuning
 
 Stepsize (eta) = 0.02 seems to be the best.

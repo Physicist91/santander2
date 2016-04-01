@@ -7,8 +7,7 @@ param <- list(objective = "binary:logistic",
 			  eval_metric = "auc",
               nthread=2,
 			  eta=0.02,
-			  max_depth=5,
-              nrounds=500)
+			  max_depth=7)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
@@ -47,9 +46,10 @@ preds <- rep(0,nrow(test))
 for (z in 1:5) {
     set.seed(z+582365)
     
-    clf <- xgb.train(   params              = param, 
-                        data                = dtrain, 
-                        nrounds             = 400, 
+    clf <- xgboost(   params              = param, 
+                        data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
+                        label=train$TARGET, 
+                        nrounds             = 373, 
                         verbose             = 1,
                         maximize            = FALSE,
                         missing=NA,
@@ -58,7 +58,7 @@ for (z in 1:5) {
     )
     
     
-    pred <- predict(clf, test)
+    pred <- predict(clf, newdata= data.matrix(test[, ! names(test) %in% c("ID", "TARGET")]), missing=NA)
     preds <- preds + pred
 }
 preds <- preds / 5.0

@@ -47,16 +47,27 @@ for(i in delta_vars){
 }
 all_dat[all_dat$var36 == 99, "var36"] <- NA
 
-#Renaming known variables
+# treat age variable
 all_dat <- rename(all_dat, age=var15)
+
 
 #Transforming categorical variable by one-hot-encoding
 all_dat$var36 <- as.factor(all_dat$var36)
-all_dat$age <- as.factor(all_dat$age)
-dummies <- dummyVars(~ age + var36, data=all_dat)
-ohe <- as.data.frame(predict(dummies, newdata=all_dat))
-all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('age', 'var36')], ohe)
 
+all_dat$ageDiscrete <- NA
+all_dat[all_dat$age < 18, "ageDiscrete" ] <- "below.18"
+all_dat[all_dat$age >= 18 &  all_dat$age < 28, "ageDiscrete"] <- "18.to.25"
+all_dat[all_dat$age >= 28 & all_dat$age < 40, "ageDiscrete" ] <- "28.to.40"
+all_dat[all_dat$age >= 40 & all_dat$age < 70, "ageDiscrete"] <- "40.to.70"
+all_dat[all_dat$age >= 70, "ageDiscrete"] <- "70.above"
+
+dummies <- dummyVars(~ ageDiscrete + var36, data=all_dat)
+ohe <- as.data.frame(predict(dummies, newdata=all_dat))
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
+
+#Experimental: using ind_var values for saldo_var30 and num_var30_0
+#all_dat[all_dat$ind_var30 == 0, "saldo_var30"] <- NA
+#all_dat[all_dat$ind_var30_0 == 0, "saldo_var30"] <- NA
 
 # Splitting the data for model
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
