@@ -1,4 +1,4 @@
-install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/myRpackages"))
+install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
 library(xgboost)
 
 

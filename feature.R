@@ -1,6 +1,6 @@
-install.packages('caret', repos='http://cran.us.r-project.org')
-install.packages('dplyr', repos='http://cran.us.r-project.org')
-install.packages('ROSE', repos='http://cran.us.r-project.org')
+install.packages('caret', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
+install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
+install.packages('ROSE', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
 
 library(caret)
 library(dplyr)
