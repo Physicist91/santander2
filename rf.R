@@ -1,4 +1,4 @@
-install.packages('randomForest', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
+install.packages('randomForest', repos='http://cran.us.r-project.org', lib= "~/")
 
 library("randomForest")
 

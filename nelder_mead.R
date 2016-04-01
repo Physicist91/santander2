@@ -1,5 +1,5 @@
-install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
-install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/myRpackages")
+install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
 
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
