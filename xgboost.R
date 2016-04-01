@@ -1,4 +1,4 @@
-install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="http://dmlc.ml/drat/", type="source", lib= "~/")
 library(xgboost, lib.loc = "~/")
 
 

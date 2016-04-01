@@ -1,5 +1,5 @@
-# library(xgboost)
-# library(Matrix)
+# library(xgboost, lib.loc = "~/")
+# library(Matrix, lib.loc = "~/")
 # 
 # set.seed(1234)
 # 
@@ -56,7 +56,7 @@
 # 
 # 
 # train <- sparse.model.matrix(TARGET ~ ., data = train)
-install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="http://dmlc.ml/drat/", type="source", lib= "~/")
 install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
 
 library(xgboost, lib.loc = "~/")
