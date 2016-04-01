@@ -56,7 +56,7 @@
 # 
 # 
 # train <- sparse.model.matrix(TARGET ~ ., data = train)
-install.packages("xgboost", repos="cran.r-project.org", lib= "~/")
+install.packages("xgboost", repos="http://cran.r-project.org", lib= "~/")
 install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
 
 library(xgboost, lib.loc = "~/")
