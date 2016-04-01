@@ -1,5 +1,5 @@
 install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/")
-library(xgboost)
+library(xgboost, lib.loc = "~/")
 
 
 #Building the model

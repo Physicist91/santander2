@@ -1,6 +1,6 @@
 install.packages('randomForest', repos='http://cran.us.r-project.org', lib= "~/")
 
-library("randomForest")
+library("randomForest", lib.loc = "~/")
 
 source("feature.R")
 

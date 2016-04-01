@@ -59,8 +59,8 @@
 install.packages('xgboost', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
 
-library(xgboost)
-library(Matrix)
+library(xgboost, lib.loc = "~/")
+library(Matrix, lib.loc = "~/")
 
 set.seed(1234)
 

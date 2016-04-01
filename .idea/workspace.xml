@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="569d790d-f5a2-4875-9b18-1c4881556b63" name="Default" comment="" />
+    <list default="true" id="569d790d-f5a2-4875-9b18-1c4881556b63" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crazy_xgboost.R" afterPath="$PROJECT_DIR$/crazy_xgboost.R" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/feature.R" afterPath="$PROJECT_DIR$/feature.R" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nelder_mead.R" afterPath="$PROJECT_DIR$/nelder_mead.R" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rf.R" afterPath="$PROJECT_DIR$/rf.R" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xgboost.R" afterPath="$PROJECT_DIR$/xgboost.R" />
+    </list>
     <ignored path="santander2.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -22,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="xgboost.R" pinned="false" current-in-tab="false">
+      <file leaf-file-name="xgboost.R" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/xgboost.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="74" selection-start-line="0" selection-start-column="74" selection-end-line="0" selection-end-column="74" />
+            <state vertical-scroll-proportion="0.025817556">
+              <caret line="1" column="31" selection-start-line="1" selection-start-column="31" selection-end-line="1" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -45,8 +51,8 @@
       <file leaf-file-name="rf.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rf.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="79" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
+            <state vertical-scroll-proportion="-1.1111112">
+              <caret line="2" column="38" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -65,17 +71,17 @@
       <file leaf-file-name="nelder_mead.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nelder_mead.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="73" selection-start-line="0" selection-start-column="73" selection-end-line="0" selection-end-column="73" />
+            <state vertical-scroll-proportion="87.92593">
+              <caret line="23" column="29" selection-start-line="23" selection-start-column="29" selection-end-line="23" selection-end-column="29" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="master.R" pinned="false" current-in-tab="true">
+      <file leaf-file-name="master.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/master.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.103270225">
+            <state vertical-scroll-proportion="-2.2222223">
               <caret line="4" column="29" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="29" />
               <folding />
             </state>
@@ -85,8 +91,8 @@
       <file leaf-file-name="feature.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/feature.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.1111112">
-              <caret line="2" column="71" selection-start-line="2" selection-start-column="71" selection-end-line="2" selection-end-column="71" />
+            <state vertical-scroll-proportion="24.037037">
+              <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -105,8 +111,8 @@
       <file leaf-file-name="crazy_xgboost.R" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/crazy_xgboost.R">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.037037">
-              <caret line="59" column="73" selection-start-line="59" selection-start-column="73" selection-end-line="59" selection-end-column="73" />
+            <state vertical-scroll-proportion="-3.1851852">
+              <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -125,12 +131,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/rf.R" />
+        <option value="$PROJECT_DIR$/master.R" />
         <option value="$PROJECT_DIR$/crazy_xgboost.R" />
         <option value="$PROJECT_DIR$/feature.R" />
         <option value="$PROJECT_DIR$/nelder_mead.R" />
+        <option value="$PROJECT_DIR$/rf.R" />
         <option value="$PROJECT_DIR$/xgboost.R" />
-        <option value="$PROJECT_DIR$/master.R" />
       </list>
     </option>
   </component>
@@ -301,12 +307,12 @@
       <option name="number" value="Default" />
       <updated>1459539220424</updated>
       <workItem from="1459539221757" duration="758000" />
-      <workItem from="1459540584753" duration="1704000" />
+      <workItem from="1459540584753" duration="2407000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2462000" />
+    <option name="totallyTimeSpent" value="3165000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="705" extended-state="6" />
@@ -400,10 +406,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/notes.Rmd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/crazy_xgboost.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.037037">
-          <caret line="59" column="73" selection-start-line="59" selection-start-column="73" selection-end-line="59" selection-end-column="73" />
+        <state vertical-scroll-proportion="-3.1851852">
+          <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -418,40 +432,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/feature.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1111112">
-          <caret line="2" column="71" selection-start-line="2" selection-start-column="71" selection-end-line="2" selection-end-column="71" />
+        <state vertical-scroll-proportion="24.037037">
+          <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/master.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.2222223">
+          <caret line="4" column="29" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nelder_mead.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="73" selection-start-line="0" selection-start-column="73" selection-end-line="0" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notes.Rmd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="87.92593">
+          <caret line="23" column="29" selection-start-line="23" selection-start-column="29" selection-end-line="23" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rf.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="79" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xgboost.R">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="74" selection-start-line="0" selection-start-column="74" selection-end-line="0" selection-end-column="74" />
+        <state vertical-scroll-proportion="-1.1111112">
+          <caret line="2" column="38" selection-start-line="2" selection-start-column="38" selection-end-line="2" selection-end-column="38" />
           <folding />
         </state>
       </provider>
@@ -464,10 +470,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/master.R">
+    <entry file="file://$PROJECT_DIR$/xgboost.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.103270225">
-          <caret line="4" column="29" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.025817556">
+          <caret line="1" column="31" selection-start-line="1" selection-start-column="31" selection-end-line="1" selection-end-column="31" />
           <folding />
         </state>
       </provider>
