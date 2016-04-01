@@ -1,0 +1,144 @@
+---
+title: "Personal Notes"
+output: html_document
+---
+
+#Setting Up
+
+```{r}
+library(xgboost)
+library(caret)
+library(dplyr)
+```
+
+#Constant variables
+
+```{r}
+dat_train <- read.csv("train.csv", stringsAsFactors = FALSE)
+dat_test <- read.csv("test.csv", stringsAsFactors = FALSE)
+
+dat_test$TARGET <- -1
+all_dat <- rbind(dat_train, dat_test)
+count <- 0
+for (i in names(all_dat)[-1])
+{
+	if (is.integer(all_dat[, i]) & length(unique(all_dat[, i])) == 1) 
+	{
+			all_dat[, i] <- NULL
+			cat("Deleted constant variable: ", i, "\n")
+		  count <- count + 1
+	}
+}
+
+cat("Deleted ", count, " constant variables.")
+```
+
+#Duplicate columns
+
+```{r}
+temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
+cat(temp, sep="\n")
+all_dat <- all_dat[!duplicated(lapply(all_dat, summary))]
+cat("Deleted ", length(temp), " duplicated variables.")
+```
+
+#Correlated variables
+
+Note: this prevents overfitting
+
+```{r}
+cor_v <- abs(cor(all_dat))
+diag(cor_v) <- 0
+cor_v[upper.tri(cor_v)] <- 0
+cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
+cat(names(all_dat)[unique(cor_v$row)], sep="\n")
+all_dat <- all_dat[,-unique(cor_v$row)]
+cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
+```
+
+
+#Variables with missing values
+
+```{r}
+boxplot(all_dat$var3)
+boxplot(all_dat[,grep('delta', names(all_dat))])
+boxplot(all_dat$var36)
+```
+
+# multi-class variables
+
+```{r}
+barplot(table(all_dat$var36))
+```
+
+# binary variables
+```{r}
+for(i in grep('^ind_', names(all_dat)) ){
+    print(table(all_dat[, i]))
+}
+
+```
+
+#Variables included in the model
+
+```{r}
+all_dat <- rename(all_dat, age=var15)
+names(all_dat)
+
+train <- all_dat[all_dat$ID %in% dat_train$ID, ]
+
+test <- all_dat[all_dat$ID %in% dat_test$ID, ]
+
+```
+
+
+#Importance
+
+```{r}
+param <- list(objective = "binary:logistic",
+              booster = "gbtree",
+			  eval_metric = "auc",
+              nthread=2,
+			  eta=0.02,
+			  max_depth=5,
+			  colsample_bytree=0.7,
+			  subsample=0.7)
+
+xgbmodel <- xgboost(data=as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
+                    label=train$TARGET,
+                    nrounds=300, maximize=T, params=param,
+                    missing=NA, verbose=0)
+Dimnames <- names(select(train, -ID, -TARGET))
+importance_matrix <- xgb.importance(Dimnames,model= xgbmodel)
+
+importance_matrix
+```
+
+Age is the most important 
+```{r}
+library(ggplot2)
+qplot(age, data=train, colour=as.factor(TARGET), geom='density')
+```
+
+saldo_var_30 is also very important
+
+```{r}
+qplot(saldo_var30, data=data, color=as.factor(ind_var30), geom='histogram')
+qplot(num_var30_0, data=data, color=as.factor(ind_var30_0), geom='histogram')
+
+```
+
+#Tuning
+
+Stepsize (eta) = 0.02 seems to be the best.
+
+max.depth = 5 seems to be the best.
+
+#Variables Recognition
+AGE = var15
+
+number of months = '^num_meses*'
+
+#New
+
+var17 financing product?
