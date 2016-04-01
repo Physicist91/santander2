@@ -1,4 +1,4 @@
-install.packages("xgboost", repos="http://dmlc.ml/drat/", type="source", lib= "~/")
+install.packages("tuning.R", repos="http://dmlc.ml/drat/", type="source", lib= "~/")
 library(xgboost, lib.loc = "~/")
 
 

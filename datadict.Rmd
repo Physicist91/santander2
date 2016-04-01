@@ -6,9 +6,9 @@ output: html_document
 #Setting Up
 
 ```{r}
-library(xgboost)
-library(caret)
-library(dplyr)
+library(xgboost, lib.loc = "~/")
+library(caret, lib.loc = "~/")
+library(dplyr, lib.loc = "~/")
 ```
 
 #Constant variables

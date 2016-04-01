@@ -81,7 +81,7 @@ train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
 
-library(xgboost)
+library(xgboost, lib.loc = "~/")
 
 
 #Building the model
