@@ -1,6 +1,7 @@
 install.packages('caret', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('ROSE', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
 
 library(caret, lib.loc = "~/")
 library(dplyr, lib.loc = "~/")

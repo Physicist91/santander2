@@ -1,5 +1,6 @@
 install.packages('Matrix', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
 
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 #oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo

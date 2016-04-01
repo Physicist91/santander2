@@ -1,4 +1,5 @@
 install.packages("tuning.R", repos="http://cran.r-project.org", lib= "~/")
+install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
 library(xgboost, lib.loc = "~/")
 
 
