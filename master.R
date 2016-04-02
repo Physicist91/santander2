@@ -1,6 +1,10 @@
-library(caret)
-library(dplyr)
-library(ROSE)
+install.packages('caret', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages('ROSE', repos='http://cran.us.r-project.org', lib= "~/")
+install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
+library(caret, lib.loc = "~/")
+library(dplyr, lib.loc = "~/")
+library(ROSE, lib.loc = "~/")
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
 # dat_test <- read.csv("../input/test.csv", stringsAsFactors = F)
@@ -66,8 +70,8 @@ ohe <- as.data.frame(predict(dummies, newdata=all_dat))
 all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
 
 #Experimental: using ind_var values for saldo_var30 and num_var30_0
-#all_dat[all_dat$ind_var30 == 0, "saldo_var30"] <- NA
-#all_dat[all_dat$ind_var30_0 == 0, "saldo_var30"] <- NA
+all_dat[all_dat$ind_var30 == 0, "saldo_var30"] <- NA
+all_dat[all_dat$ind_var30_0 == 0, "saldo_var30"] <- NA
 
 # Splitting the data for model
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
@@ -128,7 +132,7 @@ for (z in 1:5) {
   clf <- xgboost(   params              = param, 
                     data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                     label=train$TARGET, 
-                    nrounds             = 450, 
+                    nrounds             = 500, 
                     verbose             = 1,
                     maximize            = FALSE,
                     missing=NA,
