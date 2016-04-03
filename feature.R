@@ -1,5 +1,6 @@
 library(caret)
 library(dplyr)
+library(Matrix)
 #library(ROSE)
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
@@ -32,12 +33,12 @@ all_dat <- all_dat[, !names(all_dat) %in% temp]
 
 #Removing highly correlated variables
 #This prevents overfitting
-# cor_v <- abs(cor(all_dat))
-# diag(cor_v) <- 0
-# cor_v[upper.tri(cor_v)] <- 0
-# cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
-# cat(names(all_dat)[unique(cor_v$row)], sep="\n")
-# all_dat <- all_dat[,-unique(cor_v$row)]
+cor_v <- abs(cor(all_dat))
+diag(cor_v) <- 0
+cor_v[upper.tri(cor_v)] <- 0
+cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
+cat(names(all_dat)[unique(cor_v$row)], sep="\n")
+all_dat <- all_dat[,-unique(cor_v$row)]
 
 # treat age variable
 all_dat <- rename(all_dat, age=var15)
@@ -57,12 +58,24 @@ all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe
 
 # experimental: imputing zeros in saldo
 # as there's another indicator in ind_var
-all_dat[all_dat$saldo_var30 == 0, "saldo_var30"] <- NA
-all_dat[all_dat$saldo_var5 == 0, "saldo_var5"] <- NA
+# plus standardize NA to -9999
+all_dat[all_dat$saldo_var30 == 0, "saldo_var30"] <- -9999
+all_dat[all_dat$saldo_var5 == 0, "saldo_var5"] <- -9999
+# standardize missing values
+all_dat[is.na(all_dat$var3), "var3"] <- -9999
+delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
+for(i in delta_vars){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
+all_dat[is.na(all_dat$var36), "var36"] <- -9999
 
 # Splitting the data for model
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 
+y.train <- train$TARGET
+train$ID <- NULL
+train <- sparse.model.matrix(TARGET ~ .-1, data=train)
+dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
 #Synthetic data generation
 #train <- ROSE(TARGET ~ ., data=train[!names(train) == 'ID'], N=228060, seed=8888)$data
 
