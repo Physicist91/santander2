@@ -1,13 +1,42 @@
 library(xgboost)
 
+source("feature.R")
 
-#Building the model
+# one-hot encoding
+dummies <- dummyVars(~ ageDiscrete + var36, data=all_dat)
+ohe <- as.data.frame(predict(dummies, newdata=all_dat))
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
+
+# standardize NA to -9999 (required for dmatrix)
+all_dat[is.na(all_dat$var3), "var3"] <- -9999
+delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
+for(i in delta_vars){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
+var36s <- names(all_dat)[grep('var36', names(all_dat))]
+for(i in var36s){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
+
+train <- all_dat[all_dat$ID %in% dat_train$ID, ]
+test <- all_dat[all_dat$ID %in% dat_test$ID, ]
+
+y.train <- train$TARGET
+train$ID <- NULL
+train <- sparse.model.matrix(TARGET ~ .-1, data=train)
+dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
+
+ID.test <- test$ID
+test$ID <- NULL
+test <- sparse.model.matrix(TARGET ~. -1, data=test)
+
+# building the model
 param <- list(objective = "binary:logistic",
               booster = "gbtree",
-			  eval_metric = "auc",
+			        eval_metric = "auc",
               nthread=2,
-			  eta=0.02,
-			  max_depth=5)
+			        eta=0.02,
+			        max_depth=5)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
