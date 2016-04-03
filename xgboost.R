@@ -16,7 +16,7 @@ xgbcv <- xgb.cv(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                 nfold=7,
                 params = param,
                 verbose = 2,
-                maximize=F,
+                maximize=T,
                 missing = NA,
                 colsample_bytree=0.7,
                 subsample=0.7,
@@ -44,17 +44,16 @@ xgbcv <- xgb.cv(data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
 
 preds <- rep(0,nrow(test))
 for (z in 1:5) {
-    set.seed(z+12345)
-    
+    set.seed(z + 425678)
     clf <- xgboost(   params              = param, 
                         data = as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                         label=train$TARGET, 
-                        nrounds             = 373, 
+                        nrounds             = 430, 
                         verbose             = 1,
-                        maximize            = FALSE,
+                        maximize            = TRUE,
                         missing=NA,
-                        colsample_bytree=0.85,
-                        subsample=0.95
+                        colsample_bytree=0.7,
+                        subsample=0.7
     )
     
     
