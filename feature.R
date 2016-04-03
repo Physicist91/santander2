@@ -1,6 +1,7 @@
 library(caret)
 library(dplyr)
 library(Matrix)
+library(xgboost)
 #library(ROSE)
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
@@ -67,7 +68,10 @@ delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
 for(i in delta_vars){
   all_dat[is.na(all_dat[, i]), i] <- -9999
 }
-all_dat[is.na(all_dat$var36), "var36"] <- -9999
+var36s <- names(all_dat)[grep('var36', names(all_dat))]
+for(i in var36s){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
 
 # Splitting the data for model
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
@@ -76,7 +80,12 @@ y.train <- train$TARGET
 train$ID <- NULL
 train <- sparse.model.matrix(TARGET ~ .-1, data=train)
 dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
+
 #Synthetic data generation
 #train <- ROSE(TARGET ~ ., data=train[!names(train) == 'ID'], N=228060, seed=8888)$data
 
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
+y.test <- test$TARGET
+ID.test <- test$ID
+test$ID <- NULL
+test <- sparse.model.matrix(TARGET ~. -1, data=test)
