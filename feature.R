@@ -40,14 +40,16 @@ cat(names(all_dat)[unique(cor_v$row)], sep="\n")
 all_dat <- all_dat[,-unique(cor_v$row)]
 
 # treat age variable
-all_dat <- rename(all_dat, age=var15)
-all_dat$ageDiscrete <- NA
-all_dat[all_dat$age < 18, "ageDiscrete" ] <- "below.18"
-all_dat[all_dat$age >= 18 &  all_dat$age < 28, "ageDiscrete"] <- "18.to.25"
-all_dat[all_dat$age >= 28 & all_dat$age < 40, "ageDiscrete" ] <- "28.to.40"
-all_dat[all_dat$age >= 40 & all_dat$age < 70, "ageDiscrete"] <- "40.to.70"
-all_dat[all_dat$age >= 70, "ageDiscrete"] <- "70.above"
-all_dat$ageDiscrete <- as.factor(all_dat$ageDiscrete)
+# all_dat$ageDiscrete <- NA
+# all_dat[all_dat$age < 18, "ageDiscrete" ] <- "below.18"
+# all_dat[all_dat$age >= 18 &  all_dat$age < 28, "ageDiscrete"] <- "18.to.25"
+# all_dat[all_dat$age >= 28 & all_dat$age < 40, "ageDiscrete" ] <- "28.to.40"
+# all_dat[all_dat$age >= 40 & all_dat$age < 70, "ageDiscrete"] <- "40.to.70"
+# all_dat[all_dat$age >= 70, "ageDiscrete"] <- "70.above"
+# all_dat$ageDiscrete <- as.factor(all_dat$ageDiscrete)
 
 # convert to categorical
 all_dat$var36 <- as.factor(all_dat$var36)
+
+# count of ind
+all_dat$ind_count <- rowSums(all_dat[, grep('ind', names(all_dat))])

@@ -1,11 +1,12 @@
 library(xgboost)
+library(caret)
 
 source("feature.R")
 
 # one-hot encoding
-dummies <- dummyVars(~ ageDiscrete + var36, data=all_dat)
+dummies <- dummyVars(~var36, data=all_dat)
 ohe <- as.data.frame(predict(dummies, newdata=all_dat))
-all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('ageDiscrete', 'var36')], ohe)
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('var36')], ohe)
 
 # standardize NA to -9999 (required for dmatrix)
 all_dat[is.na(all_dat$var3), "var3"] <- -9999
@@ -45,8 +46,8 @@ xgbcv <- xgb.cv(data = dtrain,
                 params = param,
                 verbose = 2,
                 maximize=T,
-                colsample_bytree=0.6815,
-                subsample=0.7,
+                colsample_bytree=0.7,
+                subsample=0.8,
                 stratified=TRUE)
                 
 preds <- rep(0,nrow(test))
@@ -54,11 +55,11 @@ for (z in 1:5) {
     set.seed(z + 582365)
     clf <- xgb.train(   params              = param, 
                         data = dtrain,
-                        nrounds             = 430, 
-                        verbose             = 1,
+                        nrounds             = 450, 
+                        verbose             = 2,
                         maximize            = TRUE,
-                        colsample_bytree=0.6815,
-                        subsample=0.7
+                        colsample_bytree=0.85,
+                        subsample=0.95
     )
     
     
