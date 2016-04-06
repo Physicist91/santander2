@@ -48,14 +48,24 @@ for(i in grep('^ind_', names(all_dat)) ){
 age is the most important
 ```{r}
 library(ggplot2)
-qplot(age, data=train, colour=as.factor(TARGET), geom='density')
+qplot(age, data=dat_train, colour=as.factor(TARGET), geom='density')
 ```
 
-saldo_var_30 is also very important
+saldo_var_30 is also very important.
+ind seems to be an indicator that a customer will have zero balance!
+Unhappy customer has low balance!
 
 ```{r}
-qplot(saldo_var30, data=data, color=as.factor(ind_var30), geom='histogram')
-qplot(num_var30_0, data=data, color=as.factor(ind_var30_0), geom='histogram')
+qplot(saldo_var30, data=all_dat, fill=as.factor(ind_var30), geom='histogram')
+qplot(num_var30_0, data=all_dat, fill=as.factor(ind_var30_0), geom='histogram')
+qplot(saldo_var30, data=dat_train, color=as.factor(TARGET), geom='density')
+prop.table(table(dat_train$TARGET[dat_train$saldo_var30 < 0]))
+densityplot(dat_train$saldo_var30[dat_train$TARGET == 1], col='red')
+```
+
+Age versus country.
+```{r}
+
 ```
 
 # Data cleaning
@@ -80,6 +90,11 @@ Next is to remove variables with zero variance.
 zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE)
 names(all_dat)[zeroVar[,"zeroVar"]]
 all_dat <- all_dat[, !zeroVar[, "zeroVar"]]
+```
+
+
+```{r}
+
 ```
 
 ## Removing identical variables
@@ -137,11 +152,21 @@ var36s <- names(all_dat)[grep('var36', names(all_dat))]
 for(i in var36s){
   all_dat[is.na(all_dat[, i]), i] <- -9999
 }
+all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
 
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
 
 names(all_dat)
+
+y.train <- train$TARGET
+train$ID <- NULL
+train <- sparse.model.matrix(TARGET ~ .-1, data=train)
+dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
+
+ID.test <- test$ID
+test$ID <- NULL
+test <- sparse.model.matrix(TARGET ~. -1, data=test)
 ```
 
 xgboost algorithm
@@ -156,7 +181,7 @@ param <- list(objective = "binary:logistic",
 			  colsample_bytree=0.85,
 			  subsample=0.95)
 
-xgbmodel <- xgboost(data=as.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
+xgbmodel <- xgboost(data=dtrain,
                     label=train$TARGET,
                     nrounds=300, maximize=T, params=param,
                     missing=-9999, verbose=0)
@@ -189,6 +214,10 @@ AGE = var15
 
 number of months = '^num_meses*'
 
-var17 financing product?
+var3 is country of residence!
+
+num_meses is number of months!
 
 Impute from Hmisc?
+
+var17 financing product?

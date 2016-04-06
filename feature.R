@@ -19,6 +19,7 @@ for(i in delta_vars){
   all_dat[all_dat[, i] == 9999999999, i] <- NA
 }
 all_dat[all_dat$var36 == 99, "var36"] <- NA
+all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
 
 # removing the constant variables
 zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE)
@@ -53,3 +54,6 @@ all_dat$var36 <- as.factor(all_dat$var36)
 
 # count of ind
 all_dat$ind_count <- rowSums(all_dat[, grep('ind', names(all_dat))])
+
+# balance/saldo zero or less
+all_dat$saldo0 <- apply(all_dat[, grep('saldo', names(all_dat))], 1, function(x)(sum(x <= 0)))

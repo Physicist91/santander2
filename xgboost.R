@@ -18,6 +18,7 @@ var36s <- names(all_dat)[grep('var36', names(all_dat))]
 for(i in var36s){
   all_dat[is.na(all_dat[, i]), i] <- -9999
 }
+all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
 
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
@@ -37,7 +38,9 @@ param <- list(objective = "binary:logistic",
 			        eval_metric = "auc",
               nthread=2,
 			        eta=0.02,
-			        max_depth=5)
+			        max_depth=5,
+			        colsample_bytree=0.7,
+			        subsample=0.7)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
@@ -46,27 +49,17 @@ xgbcv <- xgb.cv(data = dtrain,
                 params = param,
                 verbose = 2,
                 maximize=T,
-                colsample_bytree=0.7,
-                subsample=0.8,
                 stratified=TRUE)
-                
-preds <- rep(0,nrow(test))
-for (z in 1:5) {
-    set.seed(z + 582365)
-    clf <- xgb.train(   params              = param, 
+
+clf <- xgb.train(       params              = param, 
                         data = dtrain,
-                        nrounds             = 450, 
+                        nrounds             = 408, 
                         verbose             = 2,
-                        maximize            = TRUE,
-                        colsample_bytree=0.85,
-                        subsample=0.95
-    )
+                        maximize            = TRUE
+       )
     
     
-    pred <- predict(clf, newdata= test, missing=-9999)
-    preds <- preds + pred
-}
-preds <- preds / 5.0
+preds <- predict(clf, newdata= test, missing=-9999)
 
 submission <- data.frame(ID = ID.test, TARGET = preds)
 
