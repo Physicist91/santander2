@@ -9,6 +9,7 @@ output: html_document
 library(xgboost)
 library(caret)
 library(dplyr)
+library(Matrix)
 ```
 
 
@@ -89,6 +90,7 @@ for(i in delta_vars){
   all_dat[all_dat[, i] == 9999999999, i] <- NA
 }
 all_dat[all_dat$var36 == 99, "var36"] <- NA
+all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
 ```
 
 Next is to remove variables with zero variance.
@@ -131,10 +133,11 @@ cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
 all_dat$var36 <- as.factor(all_dat$var36)
 
 # count of ind
-all_dat$ind_count <- rowSums(all_dat[, grep('ind', names(all_dat))])
+all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo small
-all_dat$saldo0 <- apply(all_dat[, grep('saldo', names(all_dat))], 1, function(x)(sum(x <= 10)))
+all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x <= 10)))
+all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
 ```
 
 # Modeling
@@ -159,6 +162,7 @@ for(i in var36s){
   all_dat[is.na(all_dat[, i]), i] <- -9999
 }
 all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
+all_dat[is.na(all_dat$spain30), "spain30"] <- -9999
 
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
@@ -180,17 +184,19 @@ xgboost algorithm
 ```{r}
 param <- list(objective = "binary:logistic",
               booster = "gbtree",
-			  eval_metric = "auc",
+			        eval_metric = "auc",
               nthread=2,
-			  eta=0.02,
-			  max_depth=5,
-			  colsample_bytree=0.85,
-			  subsample=0.95)
+			        eta=0.02,
+			        max_depth=5,
+			        colsample_bytree=0.85,
+			        subsample=0.95)
 
-xgbmodel <- xgboost(data=dtrain,
-                    label=train$TARGET,
-                    nrounds=300, maximize=T, params=param,
-                    missing=-9999, verbose=0)
+clf <- xgb.train(       params              = param, 
+                        data = dtrain,
+                        nrounds             = 350, 
+                        verbose             = 2,
+                        maximize            = TRUE
+       )
 ```
 
 # Feature importance

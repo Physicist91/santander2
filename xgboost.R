@@ -19,6 +19,7 @@ for(i in var36s){
   all_dat[is.na(all_dat[, i]), i] <- -9999
 }
 all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
+all_dat[is.na(all_dat$spain30), "spain30"] <- -9999
 
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
@@ -39,8 +40,8 @@ param <- list(objective = "binary:logistic",
               nthread=2,
 			        eta=0.02,
 			        max_depth=5,
-			        colsample_bytree=0.68,
-			        subsample=0.701)
+			        colsample_bytree=0.85,
+			        subsample=0.9)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
@@ -48,13 +49,16 @@ xgbcv <- xgb.cv(data = dtrain,
                 nfold=7,
                 params = param,
                 verbose = 2,
-                maximize=T,
+                maximize=FALSE,
                 stratified=TRUE)
+
+best.score <- max(xgbcv$test.auc.mean/xgbcv$test.auc.std)
+best.round <- which(xgbcv$test.auc.mean/xgbcv$test.auc.std == best.score)
 
 set.seed(1234)
 clf <- xgb.train(       params              = param, 
                         data = dtrain,
-                        nrounds             = 600, 
+                        nrounds             = best.round, 
                         verbose             = 2,
                         maximize            = TRUE
        )
