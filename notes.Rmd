@@ -71,15 +71,12 @@ table(dat_train$TARGET[dat_train$saldo_var30 < 10000])
 table(dat_train$TARGET[dat_train$saldo_var1 < 10])
 table(dat_train$TARGET[dat_train$saldo_var5 < 10])
 table(dat_train$TARGET[dat_train$saldo_var8 < 10])
-densityplot(dat_train$saldo_var30[dat_train$TARGET == 1], col='red')
-densityplot(dat_train$saldo_var1[dat_train$TARGET == 1], col='red')
-densityplot(dat_train$saldo_var5[dat_train$TARGET == 1], col='red')
-densityplot(dat_train$saldo_var8[dat_train$TARGET == 1], col='red')
+for(saldo_vars in grep('^saldo', names(dat_train))){
+  densityplot(dat_train[dat_train$TARGET == 1, saldo_vars], col='red')
+}
 ```
 
-
 # Data cleaning
-
 
 ## Removing constant variables
 
@@ -99,8 +96,8 @@ Next is to remove variables with zero variance.
 
 ```{r}
 zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE)
-names(all_dat)[zeroVar[,"zeroVar"]]
-all_dat <- all_dat[, !zeroVar[, "zeroVar"]]
+names(all_dat)[zeroVar[,"nzv"]]
+all_dat <- all_dat[, !zeroVar[, "nzv"]]
 ```
 
 
@@ -126,7 +123,6 @@ cat(names(all_dat)[unique(cor_v$row)], sep="\n")
 all_dat <- all_dat[,-unique(cor_v$row)]
 cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
 ```
-
 
 # Feature engineering
 
@@ -196,7 +192,7 @@ param <- list(objective = "binary:logistic",
 clf <- xgb.train(       params              = param,
                         data = dtrain,
                         nrounds             = 350,
-                        verbose             = 2,
+                        verbose             = 0,
                         maximize            = TRUE
        )
 ```

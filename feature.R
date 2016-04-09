@@ -22,9 +22,9 @@ all_dat[all_dat$var36 == 99, "var36"] <- NA
 all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
 
 # removing the constant variables
-zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE)
-names(all_dat)[zeroVar[,"zeroVar"]]
-all_dat <- all_dat[, !zeroVar[, "zeroVar"]]
+zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE, freqCut = (nrow(all_dat) - 10)/10,uniqueCut = 1000/nrow(all_dat))
+names(all_dat)[zeroVar[,"nzv"]]
+all_dat <- all_dat[, !zeroVar[, "nzv"]]
 
 #Removing duplicate columns
 temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
