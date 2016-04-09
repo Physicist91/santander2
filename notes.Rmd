@@ -43,37 +43,41 @@ barplot(table(all_dat$var36))
 
 Binary variables
 ```{r}
-for(i in grep('^ind_', names(all_dat)) ){
-    print(table(all_dat[, i]))
-}
+summary(mapply(as.factor, all_dat[, grep('^ind', names(all_dat))]))
 ```
 
-age is the most important
+age is the most important variable according to xgboost.
+
 ```{r}
-library(ggplot2)
 qplot(var15, data=dat_train, colour=as.factor(TARGET), geom='density')
 qplot(var15, data=dat_train[dat_train$var3 == 6, ], geom='density', col=as.factor(TARGET))
 hist(all_dat$var15[all_dat$var3 == 2])
 table(dat_train$TARGET)
-table(dat_train$TARGET[dat_train$var15 >30])
+table(dat_train$TARGET[dat_train$var15 > 30])
 ```
 
 saldo_var_30 is also very important.
 ind seems to be an indicator of something about the customer!
-Unhappy customer has low balance!
+
+customers with negative balance have 20% proportion of being unhappy!
 
 ```{r}
 qplot(saldo_var30, data=all_dat, fill=as.factor(ind_var30), geom='histogram')
 qplot(num_var30_0, data=all_dat, fill=as.factor(ind_var30_0), geom='histogram')
-qplot(saldo_var30, data=dat_train, color=as.factor(TARGET), geom='density')
-table(dat_train$TARGET)
-table(dat_train$TARGET[dat_train$saldo_var30 < 10000])
-table(dat_train$TARGET[dat_train$saldo_var1 < 10])
-table(dat_train$TARGET[dat_train$saldo_var5 < 10])
-table(dat_train$TARGET[dat_train$saldo_var8 < 10])
-for(saldo_vars in grep('^saldo', names(dat_train))){
-  densityplot(dat_train[dat_train$TARGET == 1, saldo_vars], col='red')
-}
+prop.table(table(dat_train$TARGET))
+table(dat_train$TARGET[dat_train$saldo_var30 < 0]) #type1: NegSaldo
+table(dat_train$TARGET[dat_train$saldo_var1 == 0]) #type2: unknown
+table(dat_train$TARGET[dat_train$saldo_var5 < 0]) #type 1
+table(dat_train$TARGET[dat_train$saldo_var8 < 0]) #type 1
+table(dat_train$TARGET[dat_train$saldo_var12 > 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var13 == 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var14 > 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var17 > 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var18 == 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var20 == 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var24 == 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var26 == 0]) #type 2
+table(dat_train$TARGET[dat_train$saldo_var25 > 0]) #type 2
 ```
 
 # Data cleaning
@@ -95,11 +99,10 @@ all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
 Next is to remove variables with zero variance.
 
 ```{r}
-zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE)
+zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE, freqCut = (nrow(all_dat) - 10)/10,uniqueCut = 1000/nrow(all_dat))
 names(all_dat)[zeroVar[,"nzv"]]
 all_dat <- all_dat[, !zeroVar[, "nzv"]]
 ```
-
 
 ## Removing identical variables
 
@@ -112,7 +115,7 @@ cat("Deleted ", length(temp), " duplicated variables.")
 
 ## Removing correlated variables
 
-Note: this prevents overfitting
+This prevents overfitting somehow, but perhaps it's because this is removing very sparse variables.
 
 ```{r}
 cor_v <- abs(cor(all_dat))
@@ -134,7 +137,7 @@ all_dat$var36 <- as.factor(all_dat$var36)
 all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo small
-all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x <= 10)))
+all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))
 all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
 ```
 

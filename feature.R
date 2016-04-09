@@ -23,7 +23,7 @@ all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
 
 # removing the constant variables
 zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE, freqCut = (nrow(all_dat) - 10)/10,uniqueCut = 1000/nrow(all_dat))
-names(all_dat)[zeroVar[,"nzv"]]
+cat(names(all_dat)[zeroVar[,"nzv"]], sep="\n")
 all_dat <- all_dat[, !zeroVar[, "nzv"]]
 
 #Removing duplicate columns
@@ -32,7 +32,6 @@ cat(temp, sep="\n")
 all_dat <- all_dat[, !names(all_dat) %in% temp]
 
 #Removing highly correlated variables
-#This prevents overfitting
 cor_v <- abs(cor(all_dat))
 diag(cor_v) <- 0
 cor_v[upper.tri(cor_v)] <- 0
@@ -55,5 +54,5 @@ all_dat$var36 <- as.factor(all_dat$var36)
 all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo zero or less
-all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x <= 10)))
+all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))
 all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
