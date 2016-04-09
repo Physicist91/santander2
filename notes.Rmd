@@ -48,25 +48,32 @@ for(i in grep('^ind_', names(all_dat)) ){
 age is the most important
 ```{r}
 library(ggplot2)
-qplot(age, data=dat_train, colour=as.factor(TARGET), geom='density')
+qplot(var15, data=dat_train, colour=as.factor(TARGET), geom='density')
+qplot(var15, data=dat_train[dat_train$var3 == 6, ], geom='density', col=as.factor(TARGET))
+hist(all_dat$var15[all_dat$var3 == 2])
+table(dat_train$TARGET)
+table(dat_train$TARGET[dat_train$var15 >30])
 ```
 
 saldo_var_30 is also very important.
-ind seems to be an indicator that a customer will have zero balance!
+ind seems to be an indicator of something about the customer!
 Unhappy customer has low balance!
 
 ```{r}
 qplot(saldo_var30, data=all_dat, fill=as.factor(ind_var30), geom='histogram')
 qplot(num_var30_0, data=all_dat, fill=as.factor(ind_var30_0), geom='histogram')
 qplot(saldo_var30, data=dat_train, color=as.factor(TARGET), geom='density')
-prop.table(table(dat_train$TARGET[dat_train$saldo_var30 < 0]))
+table(dat_train$TARGET)
+table(dat_train$TARGET[dat_train$saldo_var30 < 10000])
+table(dat_train$TARGET[dat_train$saldo_var1 < 10])
+table(dat_train$TARGET[dat_train$saldo_var5 < 10])
+table(dat_train$TARGET[dat_train$saldo_var8 < 10])
 densityplot(dat_train$saldo_var30[dat_train$TARGET == 1], col='red')
+densityplot(dat_train$saldo_var1[dat_train$TARGET == 1], col='red')
+densityplot(dat_train$saldo_var5[dat_train$TARGET == 1], col='red')
+densityplot(dat_train$saldo_var8[dat_train$TARGET == 1], col='red')
 ```
 
-Age versus country.
-```{r}
-
-```
 
 # Data cleaning
 
@@ -92,10 +99,6 @@ names(all_dat)[zeroVar[,"zeroVar"]]
 all_dat <- all_dat[, !zeroVar[, "zeroVar"]]
 ```
 
-
-```{r}
-
-```
 
 ## Removing identical variables
 
@@ -129,6 +132,9 @@ all_dat$var36 <- as.factor(all_dat$var36)
 
 # count of ind
 all_dat$ind_count <- rowSums(all_dat[, grep('ind', names(all_dat))])
+
+# balance/saldo small
+all_dat$saldo0 <- apply(all_dat[, grep('saldo', names(all_dat))], 1, function(x)(sum(x <= 10)))
 ```
 
 # Modeling

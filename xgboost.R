@@ -39,8 +39,8 @@ param <- list(objective = "binary:logistic",
               nthread=2,
 			        eta=0.02,
 			        max_depth=5,
-			        colsample_bytree=0.7,
-			        subsample=0.7)
+			        colsample_bytree=0.68,
+			        subsample=0.701)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
@@ -51,9 +51,10 @@ xgbcv <- xgb.cv(data = dtrain,
                 maximize=T,
                 stratified=TRUE)
 
+set.seed(1234)
 clf <- xgb.train(       params              = param, 
                         data = dtrain,
-                        nrounds             = 408, 
+                        nrounds             = 600, 
                         verbose             = 2,
                         maximize            = TRUE
        )

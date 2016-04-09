@@ -56,4 +56,5 @@ all_dat$var36 <- as.factor(all_dat$var36)
 all_dat$ind_count <- rowSums(all_dat[, grep('ind', names(all_dat))])
 
 # balance/saldo zero or less
-all_dat$saldo0 <- apply(all_dat[, grep('saldo', names(all_dat))], 1, function(x)(sum(x <= 0)))
+all_dat$saldo0 <- apply(all_dat[, grep('saldo', names(all_dat))], 1, function(x)(sum(x < 10)))
+all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
