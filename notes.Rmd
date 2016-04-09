@@ -10,6 +10,7 @@ library(xgboost)
 library(caret)
 library(dplyr)
 library(Matrix)
+library(ggplot2)
 ```
 
 
@@ -31,6 +32,7 @@ Detect missing values.
 boxplot(all_dat$var3)
 boxplot(all_dat[,grep('delta', names(all_dat))])
 boxplot(all_dat$var36)
+boxplot(all_dat$num_var12_0)
 ```
 
 Multi-class variables
@@ -191,9 +193,9 @@ param <- list(objective = "binary:logistic",
 			        colsample_bytree=0.85,
 			        subsample=0.95)
 
-clf <- xgb.train(       params              = param, 
+clf <- xgb.train(       params              = param,
                         data = dtrain,
-                        nrounds             = 350, 
+                        nrounds             = 350,
                         verbose             = 2,
                         maximize            = TRUE
        )

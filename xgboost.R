@@ -49,21 +49,21 @@ xgbcv <- xgb.cv(data = dtrain,
                 nfold=7,
                 params = param,
                 verbose = 2,
-                maximize=FALSE,
+                maximize=TRUE,
                 stratified=TRUE)
 
 best.score <- max(xgbcv$test.auc.mean/xgbcv$test.auc.std)
 best.round <- which(xgbcv$test.auc.mean/xgbcv$test.auc.std == best.score)
 
 set.seed(1234)
-clf <- xgb.train(       params              = param, 
+clf <- xgb.train(       params              = param,
                         data = dtrain,
-                        nrounds             = best.round, 
+                        nrounds             = best.round,
                         verbose             = 2,
                         maximize            = TRUE
        )
-    
-    
+
+
 preds <- predict(clf, newdata= test, missing=-9999)
 
 submission <- data.frame(ID = ID.test, TARGET = preds)
