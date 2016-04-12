@@ -100,7 +100,7 @@ vtcs <- NM_opt( vtcs_init = cbind(nround = log(c(200,500,700,1000,900,600,400,80
                                   min_child_weight = log(c(4,3,4,9,2,10,3,10)),
                                   subsample = -log(1/c(0.5,0.3,0.9,0.4,0.3,0.5,0.8,0.1) - 1 +1e-05)),
                 obj_fun = xgb_wrap_obj3,
-                fxd_obj_param  = list(param = list("nthread" = 2,   # number of threads to be used 
+                fxd_obj_param  = list(param = list("nthread" = 8,   # number of threads to be used 
                                                    "objective" = "binary:logistic",    # binary classification 
                                                    "eval_metric" ="auc"    # evaluation metric
                 ),
