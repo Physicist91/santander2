@@ -1,10 +1,12 @@
 install.packages('caret', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages('dplyr', repos='http://cran.us.r-project.org', lib= "~/")
 install.packages("xgboost", repos="https://cran.rstudio.com", lib= "~/")
+install.packages("pROC", repos="https://cran.rstudio.com", lib= "~/")
 library(caret, lib.loc = "~/")
 library(dplyr, lib.loc = "~/")
 library(xgboost, lib.loc= "~/")
 library(Matrix)
+library(pROC, lib.loc="~/")
 
 # dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
 # dat_test <- read.csv("../input/test.csv", stringsAsFactors = F)
