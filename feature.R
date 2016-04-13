@@ -51,8 +51,15 @@ all_dat <- all_dat[,-unique(cor_v$row)]
 # convert to categorical
 all_dat$var36 <- as.factor(all_dat$var36)
 
+# count no. of nonzero elements
+all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x != 0, na.rm=TRUE)))
+
+# another simple count
 all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo zero or less
 all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))
 all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
+
+# ratios
+all_dat$var5_ratio <- (all_dat$saldo_medio_var5_hace2 + 1)/(all_dat$saldo_medio_var5_hace3 + 1)
