@@ -84,7 +84,11 @@ train[is.na(train$spain30), "spain30"] <- -9999
 
 xgb_grid <- expand.grid(nrounds=c(300, 500, 700, 1000, 1500),
                         max_depth=c(5, 6, 7, 8),
-                        eta=c(0.001, 0.005, 0.01, 0.02, 0.03, 0.1))
+                        eta=c(0.001, 0.005, 0.01, 0.02, 0.03, 0.1),
+                        gamma=c(0, 1),
+                        colsample_bytree=c(0.3, 0.5, 0.7, 0.8),
+                        min_child_weight=c(5, 10, 20, 40)
+                        )
 
 xgb_trcontrol <- trainControl(method='cv',
                               number=7,
