@@ -103,7 +103,7 @@ xgb_tune <- train(x=data.matrix(train[, !names(train) %in% c("ID", "TARGET")]),
                   verbose=TRUE,
                   eval_metric='auc',
                   objective='binary:logistic',
-                  nthread=2,
+                  nthread=8,
                   missing=-9999)
 
 write.csv(xgb_tune, "xgb_tune.csv")
