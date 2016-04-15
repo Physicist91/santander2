@@ -31,23 +31,6 @@ temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
 cat(temp, sep="\n")
 all_dat <- all_dat[, !names(all_dat) %in% temp]
 
-#Removing highly correlated variables
-cor_v <- abs(cor(all_dat))
-diag(cor_v) <- 0
-cor_v[upper.tri(cor_v)] <- 0
-cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
-cat(names(all_dat)[unique(cor_v$row)], sep="\n")
-all_dat <- all_dat[,-unique(cor_v$row)]
-
-# treat age variable
-# all_dat$ageDiscrete <- NA
-# all_dat[all_dat$age < 18, "ageDiscrete" ] <- "below.18"
-# all_dat[all_dat$age >= 18 &  all_dat$age < 28, "ageDiscrete"] <- "18.to.25"
-# all_dat[all_dat$age >= 28 & all_dat$age < 40, "ageDiscrete" ] <- "28.to.40"
-# all_dat[all_dat$age >= 40 & all_dat$age < 70, "ageDiscrete"] <- "40.to.70"
-# all_dat[all_dat$age >= 70, "ageDiscrete"] <- "70.above"
-# all_dat$ageDiscrete <- as.factor(all_dat$ageDiscrete)
-
 # convert to categorical
 all_dat$var36 <- as.factor(all_dat$var36)
 
