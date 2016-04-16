@@ -63,29 +63,34 @@ table(dat_train$TARGET[dat_train$var15 > 30])
 ```
 
 saldo_var_30 is also very important.
-ind seems to be an indicator of something about the customer!
+ind seems to be an indicator of something about the customer.
 
-customers with negative balance have 20% proportion of being unhappy!
 
 ```{r}
 qplot(saldo_var30, data=all_dat, fill=as.factor(ind_var30), geom='histogram')
 qplot(num_var30_0, data=all_dat, fill=as.factor(ind_var30_0), geom='histogram')
+qplot(as.factor(ind_var30), data=dat_train, fill=as.factor(TARGET))
+qplot(as.factor(ind_var30_0), data=dat_train, fill=as.factor(TARGET))
+cor(dat_train$ind_var30, dat_train$TARGET)
+```
+
+customers with negative balance have 20% proportion of being unhappy!
+but this is negligible compared to the entire dataset.
+
+```{r}
 table(dat_train$TARGET[dat_train$saldo_var30 < 0]) #type1: NegSaldo
-table(dat_train$TARGET[dat_train$saldo_var1 == 0]) #type2: unknown
 table(dat_train$TARGET[dat_train$saldo_var5 < 0]) #type 1
 table(dat_train$TARGET[dat_train$saldo_var8 < 0]) #type 1
-table(dat_train$TARGET[dat_train$saldo_var12 > 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var13 == 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var14 > 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var17 > 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var18 == 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var20 == 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var24 == 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var26 == 0]) #type 2
-table(dat_train$TARGET[dat_train$saldo_var25 > 0]) #type 2
 ```
 
 # Data cleaning
+
+First, one piece of feature engineering.
+
+```{r}
+# count no. of nonzero elements
+all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))
+```
 
 ## Removing constant variables
 
@@ -123,12 +128,6 @@ cat("Deleted ", length(temp), " duplicated variables.")
 ```{r}
 # convert to categorical
 all_dat$var36 <- as.factor(all_dat$var36)
-
-# count no. of nonzero elements
-all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x != 0, na.rm=TRUE)))
-
-# count of ind
-all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo small
 all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))
@@ -182,18 +181,18 @@ xgboost algorithm
 ```{r}
 param <- list(objective = "binary:logistic",
               booster = "gbtree",
-			        eval_metric = "auc",
+			  eval_metric = "auc",
               nthread=2,
 			        eta=0.02,
-			        max_depth=5,
-			        colsample_bytree=0.7,
-			        subsample=0.9,
+			        max_depth=4,
+			        colsample_bytree=0.5,
+			        subsample=1,
 			        min_child_weight=10,
-			        max_delta_step=1)
+			        max_delta_step=5)
 
 clf <- xgb.train(       params              = param,
                         data = dtrain,
-                        nrounds             = 350,
+                        nrounds             = 900,
                         verbose             = 0
        )
 ```

@@ -1,9 +1,6 @@
-library(caret)
-library(dplyr)
 library(Matrix)
+library(caret)
 
-# dat_train <- read.csv("../input/train.csv", stringsAsFactors = F)
-# dat_test <- read.csv("../input/test.csv", stringsAsFactors = F)
 dat_train <- read.csv("train.csv", stringsAsFactors = FALSE)
 dat_test <- read.csv("test.csv", stringsAsFactors = FALSE)
 
@@ -11,6 +8,9 @@ dat_test$TARGET <- -1
 
 # merging the test and train data
 all_dat <- rbind(dat_train, dat_test)
+
+# count no. of nonzero elements
+all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))
 
 # standardize missing values
 all_dat[all_dat$var3 == -999999, "var3"] <- NA
@@ -33,12 +33,6 @@ all_dat <- all_dat[, !names(all_dat) %in% temp]
 
 # convert to categorical
 all_dat$var36 <- as.factor(all_dat$var36)
-
-# count no. of nonzero elements
-all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x != 0, na.rm=TRUE)))
-
-# another simple count
-all_dat$ind_count <- apply(all_dat[, grep('^ind', names(all_dat))], 1, function(x)(sum(x == 0)))
 
 # balance/saldo zero or less
 all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))

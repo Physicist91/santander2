@@ -1,6 +1,6 @@
 library(xgboost)
-library(caret)
 library(ggplot2)
+library(caret)
 
 source("feature.R")
 
@@ -45,7 +45,7 @@ param <- list(objective = "binary:logistic",
 			        colsample_bytree=0.5,
 			        min_child_weight=10,
 			        max_delta_step=5,
-			        subsample=0.75)
+			        subsample=1)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
@@ -69,7 +69,7 @@ ggplot(xgbcv, aes(x=1:nrow(xgbcv), y=train.auc.mean)) +
 
 preds_df <- data.frame(preds=rep(0, length(ID.test)))
 
-for(z in 1:50){
+for(z in 1:20){
   set.seed(z + 12)
   clf <- xgb.train(       params              = param,
                           data = dtrain,
