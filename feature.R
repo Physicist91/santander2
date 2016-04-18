@@ -10,7 +10,7 @@ dat_test$TARGET <- -1
 all_dat <- rbind(dat_train, dat_test)
 
 # count no. of nonzero elements
-all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))
+all_dat$nonzero <- apply(all_dat[, !names(all_dat) == 'TARGET'], 1, function(x) (sum(x == 0)))
 
 # standardize missing values
 all_dat[all_dat$var3 == -999999, "var3"] <- NA
