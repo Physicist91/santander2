@@ -11,6 +11,7 @@ all_dat <- rbind(dat_train, dat_test)
 
 # count no. of nonzero elements
 all_dat$nonzero <- apply(all_dat[, !names(all_dat) == 'TARGET'], 1, function(x) (sum(x != 0)))
+all_dat$var <- apply(all_dat[, !names(all_dat) == 'TARGET'], 1, function(x) var(x))
 
 # change var3 to either 2 (Spain) or not 2
 all_dat$is_spain <- ifelse(all_dat$var3 == 2, 1, 0)
