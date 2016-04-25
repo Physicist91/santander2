@@ -4,31 +4,13 @@ library(caret)
 
 source("feature.R")
 
-# one-hot encoding
-dummies <- dummyVars(~var36, data=all_dat)
-ohe <- as.data.frame(predict(dummies, newdata=all_dat))
-all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('var36')], ohe)
-
-# standardize NA to -9999 (required for dmatrix)
-all_dat[is.na(all_dat$var3), "var3"] <- -9999
-delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
-for(i in delta_vars){
-  all_dat[is.na(all_dat[, i]), i] <- -9999
-}
-var36s <- names(all_dat)[grep('var36', names(all_dat))]
-for(i in var36s){
-  all_dat[is.na(all_dat[, i]), i] <- -9999
-}
-all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
-all_dat[is.na(all_dat$spain30), "spain30"] <- -9999
-
 train <- all_dat[all_dat$ID %in% dat_train$ID, ]
 test <- all_dat[all_dat$ID %in% dat_test$ID, ]
 
 y.train <- train$TARGET
 train$ID <- NULL
 train <- sparse.model.matrix(TARGET ~ .-1, data=train)
-dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
+dtrain <- xgb.DMatrix(data=train, label=y.train)
 
 ID.test <- test$ID
 test$ID <- NULL
