@@ -1,0 +1,256 @@
+---
+title: "Personal Notes"
+output: html_document
+---
+
+#Setting Up
+
+```{r}
+library(xgboost)
+library(caret)
+library(dplyr)
+library(Matrix)
+library(ggplot2)
+```
+
+
+# Exploratory analysis
+
+Read data and combine train and test into one dataframe.
+
+```{r}
+dat_train <- read.csv("train.csv", stringsAsFactors = FALSE)
+dat_test <- read.csv("test.csv", stringsAsFactors = FALSE)
+
+dat_test$TARGET <- -1
+all_dat <- rbind(dat_train, dat_test)
+```
+
+Examine the imbalance of classes.
+
+```{r}
+table(dat_train$TARGET)
+prop.table(table(dat_train$TARGET))
+```
+
+Detect missing values.
+
+```{r}
+boxplot(all_dat$var3)
+boxplot(all_dat[,grep('delta', names(all_dat))])
+boxplot(all_dat$var36)
+boxplot(all_dat$num_var12_0)
+```
+
+Multi-class variables
+
+```{r}
+barplot(table(all_dat$var36))
+```
+
+Binary variables
+```{r}
+summary(mapply(as.factor, all_dat[, grep('^ind', names(all_dat))]))
+```
+
+age is the most important variable according to xgboost.
+
+```{r}
+qplot(var15, data=dat_train, colour=as.factor(TARGET), geom='density')
+qplot(var15, data=dat_train[dat_train$var3 == 6, ], geom='density', col=as.factor(TARGET))
+hist(all_dat$var15[all_dat$var3 == 2])
+table(dat_train$TARGET[dat_train$var15 > 30])
+```
+
+saldo_var_30 is also very important.
+ind seems to be an indicator of something about the customer.
+
+
+```{r}
+qplot(saldo_var30, data=all_dat, fill=as.factor(ind_var30), geom='histogram')
+qplot(num_var30_0, data=all_dat, fill=as.factor(ind_var30_0), geom='histogram')
+qplot(as.factor(ind_var30), data=dat_train, fill=as.factor(TARGET))
+qplot(as.factor(ind_var30_0), data=dat_train, fill=as.factor(TARGET))
+cor(dat_train$ind_var30, dat_train$TARGET)
+```
+
+customers with negative balance have 20% proportion of being unhappy!
+but this is negligible compared to the entire dataset.
+
+```{r}
+table(dat_train$TARGET[dat_train$saldo_var30 < 0]) #type1: NegSaldo
+table(dat_train$TARGET[dat_train$saldo_var5 < 0]) #type 1
+table(dat_train$TARGET[dat_train$saldo_var8 < 0]) #type 1
+```
+
+# Data cleaning
+
+First, one piece of feature engineering.
+
+```{r}
+# count no. of nonzero elements
+all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))
+```
+
+## Removing constant variables
+
+First is to encode missing values with NA.
+
+```{r}
+all_dat[all_dat$var3 == -999999, "var3"] <- NA
+delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
+for(i in delta_vars){
+  all_dat[all_dat[, i] == 9999999999, i] <- NA
+}
+all_dat[all_dat$var36 == 99, "var36"] <- NA
+all_dat[all_dat$num_var12_0 == 111, "num_var12_0"] <- NA
+```
+
+Next is to remove variables with zero variance.
+
+```{r}
+zeroVar <- nearZeroVar(all_dat, saveMetrics = TRUE, freqCut = (nrow(all_dat) - 10)/10,uniqueCut = 1000/nrow(all_dat))
+names(all_dat)[zeroVar[,"nzv"]]
+all_dat <- all_dat[, !zeroVar[, "nzv"]]
+```
+
+## Removing identical variables
+
+```{r}
+temp <- names(all_dat)[duplicated(lapply(all_dat, summary))]
+cat(temp, sep="\n")
+all_dat <- all_dat[!duplicated(lapply(all_dat, summary))]
+cat("Deleted ", length(temp), " duplicated variables.")
+```
+
+# Feature engineering
+
+```{r}
+# convert to categorical
+all_dat$var36 <- as.factor(all_dat$var36)
+
+# balance/saldo small
+all_dat$saldo0 <- apply(all_dat[, grep('^saldo', names(all_dat))], 1, function(x)(sum(x < 0)))
+all_dat$spain30 <- (all_dat$var15 > 30 & all_dat$var3 == 2) * 1
+
+# ratios
+all_dat$var5_ratio <- (all_dat$saldo_medio_var5_hace2 + 1)/(all_dat$saldo_medio_var5_hace3 + 1)
+```
+
+# Modeling
+
+xgboost preprocessing
+
+```{r}
+
+# one-hot encoding
+dummies <- dummyVars(~var36, data=all_dat)
+ohe <- as.data.frame(predict(dummies, newdata=all_dat))
+all_dat <- cbind(all_dat[, ! names(all_dat) %in% c('var36')], ohe)
+
+# standardize NA to -9999 (required for dmatrix)
+all_dat[is.na(all_dat$var3), "var3"] <- -9999
+delta_vars <- names(all_dat)[grep('^delta', names(all_dat))]
+for(i in delta_vars){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
+var36s <- names(all_dat)[grep('var36', names(all_dat))]
+for(i in var36s){
+  all_dat[is.na(all_dat[, i]), i] <- -9999
+}
+all_dat[is.na(all_dat$num_var12_0), "num_var12_0"] <- -9999
+all_dat[is.na(all_dat$spain30), "spain30"] <- -9999
+
+names(all_dat)
+
+train <- all_dat[all_dat$ID %in% dat_train$ID, ]
+test <- all_dat[all_dat$ID %in% dat_test$ID, ]
+
+y.train <- train$TARGET
+train$ID <- NULL
+train <- sparse.model.matrix(TARGET ~ .-1, data=train)
+dtrain <- xgb.DMatrix(data=train, label=y.train, missing=-9999)
+
+ID.test <- test$ID
+test$ID <- NULL
+test <- sparse.model.matrix(TARGET ~. -1, data=test)
+```
+
+xgboost algorithm
+
+```{r}
+param <- list(objective = "binary:logistic",
+              booster = "gbtree",
+			  eval_metric = "auc",
+              nthread=2,
+			        eta=0.02,
+			        max_depth=4,
+			        colsample_bytree=0.5,
+			        subsample=1,
+			        min_child_weight=10,
+			        max_delta_step=5)
+
+clf <- xgb.train(       params              = param,
+                        data = dtrain,
+                        nrounds             = 900,
+                        verbose             = 0
+       )
+```
+
+How many we get it right?
+```{r}
+prop.table(table(dat_train$TARGET))
+confusionMatrix(ifelse(predict(clf, newdata=train, missing=-9999) > 0.5, 1, 0), dat_train$TARGET)
+```
+
+# Feature importance
+
+Variable importance as obtained from xgboost.
+
+```{r}
+importance_matrix <- xgb.importance(train@Dimnames[[2]],model= clf)
+
+importance_matrix
+
+#xgb.plot.importance(importance_matrix[1:20, ])
+```
+
+
+# Other notes
+
+* AGE = var15
+
+* number of months = '^num_meses'
+
+* var3 = country of residence.
+
+Few things to try
+* Impute from Hmisc
+* var17 financing product?
+* k-NN /clustering
+* ensemble learning
+* vowpaw wabbit
+
+Treating age variable as discrete/age ranges doesn't improve the AUC.
+Code is below.
+```{r}
+# all_dat$ageDiscrete <- NA
+# all_dat[all_dat$age < 18, "ageDiscrete" ] <- "below.18"
+# all_dat[all_dat$age >= 18 &  all_dat$age < 28, "ageDiscrete"] <- "18.to.25"
+# all_dat[all_dat$age >= 28 & all_dat$age < 40, "ageDiscrete" ] <- "28.to.40"
+# all_dat[all_dat$age >= 40 & all_dat$age < 70, "ageDiscrete"] <- "40.to.70"
+# all_dat[all_dat$age >= 70, "ageDiscrete"] <- "70.above"
+# all_dat$ageDiscrete <- as.factor(all_dat$ageDiscrete)
+```
+
+Removing correlated variables prevents overfitting somehow, but perhaps it's because this is removing very sparse variables.
+
+```{r}
+# cor_v <- abs(cor(all_dat))
+# diag(cor_v) <- 0
+# cor_v[upper.tri(cor_v)] <- 0
+# cor_v <- as.data.frame(which(cor_v > 0.85, arr.ind = T))
+# names(all_dat)[unique(cor_v$row)]
+# all_dat <- all_dat[,-unique(cor_v$row)]
+# cat("Deleted ", length(unique(cor_v$row)), " correlated variables.")
+```
