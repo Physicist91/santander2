@@ -22,17 +22,17 @@ param <- list(objective = "binary:logistic",
               booster = "gbtree",
 			        eval_metric = "auc",
               nthread=2,
-			        eta=0.01,
-			        max_depth=4,
+			        eta=0.005,
+			        max_depth=5,
 			        colsample_bytree=0.5,
-			        min_child_weight=10,
+			        min_child_weight=15,
 			        max_delta_step=5,
 			        subsample=1)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
-                nrounds=1500,
-                nfold=10,
+                nrounds=2000,
+                nfold=5,
                 params = param,
                 verbose = 2,
                 stratified=TRUE,
@@ -49,6 +49,7 @@ ggplot(xgbcv, aes(x=1:nrow(xgbcv), y=train.auc.mean)) +
   geom_line(aes(y=test.auc.mean), col='red') +
   ylab('auc')
 
+
 preds_df <- data.frame(preds=rep(0, length(ID.test)))
 
 for(z in 1:20){
@@ -63,9 +64,12 @@ for(z in 1:20){
   preds_df <- cbind(preds_df, predict(clf, newdata= test, missing=-9999))
 }
 
+importance_matrix <- xgb.importance(train@Dimnames[[2]],model= clf)
 
-preds <- rowMeans(preds_df[, -1])
+xgb.plot.importance(importance_matrix[1:20, ])
 
-submission <- data.frame(ID = ID.test, TARGET = preds)
+preds_xgb <- rowMeans(preds_df[, -1])
+
+submission <- data.frame(ID = ID.test, TARGET = preds_xgb)
 
 write.csv(submission, "submission.csv", row.names = FALSE)

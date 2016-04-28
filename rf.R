@@ -1,4 +1,5 @@
 library("randomForest")
+library('pROC')
 
 source("feature.R")
 
@@ -7,9 +8,12 @@ training <- all_dat[all_dat$ID %in% dat_train$ID, ]
 testing <- all_dat[all_dat$ID %in% dat_test$ID, ]
 
 training$ID <- NULL
-training$TARGET <- as.factor(training$TARGET)
+training$TARGET <- as.factor(ifelse(training$TARGET == 0, 'S', 'U'))
 
-rfmodel <- randomForest(TARGET ~ ., data=training, ntree= 101, do.trace=TRUE, mtry=145)
+fitControl <- trainControl(method="cv", number=5, classProbs=TRUE, summaryFunction = twoClassSummary, verboseIter=TRUE)
 
-preds <- predict(rfmodel, newdata=test[, !names(test) %in% c("ID", "TARGET")], type='vote')
-preds
+rfmodel <- train(TARGET ~ ., data=training, method='rf', trControl=fitControl, ntree= 101, verbose=TRUE, metric='ROC')
+
+
+preds_rf <- predict(rfmodel, newdata=test[, !names(test) %in% c("ID", "TARGET")], type='vote')
+
