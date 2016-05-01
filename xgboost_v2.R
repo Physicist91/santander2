@@ -80,3 +80,4 @@ preds[var36.0 == 1] <- 0
 submission <- data.frame(ID = ID.test, TARGET = preds)
 
 write.csv(submission, "submission.csv", row.names = FALSE)
+

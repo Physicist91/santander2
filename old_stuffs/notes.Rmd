@@ -8,6 +8,7 @@ output: html_document
 ```{r}
 library(xgboost)
 library(caret)
+library(dplyr)
 library(Matrix)
 library(ggplot2)
 ```
@@ -88,9 +89,7 @@ First, one piece of feature engineering.
 
 ```{r}
 # count no. of nonzero elements
-all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))f
-training <- all_dat[all_dat$ID %in% dat_train$ID, ]
-qplot(nonzero, geom='density', col=as.factor(TARGET), data=training)
+all_dat$nonzero <- apply(all_dat, 1, function(x) (sum(x == 0)))
 ```
 
 ## Removing constant variables
@@ -211,7 +210,7 @@ Variable importance as obtained from xgboost.
 ```{r}
 importance_matrix <- xgb.importance(train@Dimnames[[2]],model= clf)
 
-importance_matrix[1: 20,]
+importance_matrix
 
 #xgb.plot.importance(importance_matrix[1:20, ])
 ```

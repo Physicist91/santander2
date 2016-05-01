@@ -1,0 +1,60 @@
+---
+title: "rules-based"
+author: "Kevin S."
+date: "30 April 2016"
+output: html_document
+---
+
+```{r}
+table(dat_train$var15, dat_train$TARGET)
+
+# saldo_var30
+qplot(saldo_var30, data=dat_train, col=as.factor(TARGET),
+      geom='density')
+boxplot(saldo_var30 ~as.factor(TARGET), data=dat_train)
+summary(dat_train$saldo_var30[dat_train$TARGET == 1])
+summary(dat_train$saldo_var30[dat_train$TARGET == 0])
+table(dat_train$TARGET[dat_train$saldo_var30 < 10000])/sum(dat_train$TARGET == 1)
+
+hist(dat_train$var15[dat_train$TARGET == 0 & dat_train$saldo_var30 < 3], main='Happy')
+hist(dat_train$var15[dat_train$TARGET == 1 & dat_train$saldo_var30 < 3], main='Unhappy')
+
+table(dat_train$var15[dat_train$TARGET == 0 & dat_train$saldo_var30 < 3])
+
+summary(dat_train$saldo_medio_var5_hace2)
+qplot(saldo_medio_var5_hace2, data=dat_train, col=as.factor(TARGET))
+qplot(saldo_medio_var5_hace3, data=dat_train, col=as.factor(TARGET))
+table(dat_train$TARGET[dat_train$saldo_medio_var5_hace3 < 0])
+(dat_train$saldo_medio_var5_hace2 - dat_train$saldo_medio_var5_hace3)
+
+summary(dat_train$saldo_medio_var13_corto_hace2)
+summary(dat_train$saldo_medio_var13_corto_hace3)
+
+qplot(saldo_medio_var13_corto_hace2, data=dat_train, fill=as.factor(TARGET))
+
+table(dat_train$num_var4, dat_train$TARGET)
+```
+
+# Tuning 1: mean 0.842++, std 0.016++, = 0.826
+param <- list(objective = "binary:logistic",
+              booster = "gbtree",
+			        eval_metric = "auc",
+              nthread=2,
+			        eta=0.015,
+			        max_depth=5,
+			        colsample_bytree=0.5,
+			        min_child_weight=10,
+			        max_delta_step=5,
+			        subsample=1)
+			        
+# Tuning 2, different features: mean 0.8415, std 0.00367, = 0.837
+param <- list(objective = "binary:logistic",
+              booster = "gbtree",
+			        eval_metric = "auc",
+              nthread=2,
+			        eta=0.015,
+			        max_depth=5,
+			        colsample_bytree=0.5,
+			        min_child_weight=10,
+			        max_delta_step=5,
+			        subsample=1)

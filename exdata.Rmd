@@ -1,0 +1,113 @@
+---
+title: "Exdata"
+author: "Kevin"
+date: "April 20, 2016"
+output: html_document
+---
+
+# Setting up
+
+Getting data
+
+```{r}
+training <- read.csv("train.csv", stringsAsFactors = FALSE)
+testing <- read.csv("test.csv", stringsAsFactors = FALSE)
+testing$TARGET <- -1
+all_data <- rbind(training, testing)
+```
+
+Loading additional libraries
+
+```{r}
+library("ggplot2")
+```
+
+
+# Identifying the countries where it is encoded as -999999
+
+```{r}
+qplot(var3 == 2, data=training, fill=as.factor(TARGET), geom='bar')
+table(training[training$var3 == 2, "TARGET"])
+table(training[training$var3 != 2, "TARGET"]) #only 2% are not in Spain
+qplot(var15, data=training[training$var3 == -999999, ], fill=as.factor(TARGET))
+```
+
+Conclusion: we can divide the countries into two: spain or not spain.
+
+# Exploration on num_var12_0
+
+```{r}
+table(training$TARGET[training$num_var12_0 == 0])
+table(training$TARGET[training$num_var12_0 != 0])
+table(testing$num_var12_0)
+table(all_data$num_var12_0)
+qplot(as.factor(num_var12_0), data=training, fill=as.factor(TARGET))
+qplot(as.factor(num_var12_0), data=all_data, fill=as.factor(TARGET == -1))
+```
+
+Conclusion: we can separate num_var12_0 to either zero or not zero.
+
+# Exploration on var36
+
+```{r}
+qplot(as.factor(var36), data=training, fill=as.factor(TARGET))
+table(training$TARGET[training$var36 == 99])
+```
+
+Category 99 is important and should be left as is.
+
+# Exploration on delta variables
+
+```{r}
+boxplot(all_data[,grep('delta', names(all_data))])
+summary(all_data[,grep('delta', names(all_data))])
+str(all_data[,grep('delta', names(all_data))])
+```
+
+Most delta variables has values equal to zero, and some have quite a proportion of satisfied customers (TARGET=0) when the delta variable is not zero.
+```{r}
+for(delta in names(all_data)[grep('^delta', names(all_data))]){
+  print(delta)
+  print(table(all_data[, delta]))
+  print("When variable is not zero:")
+  print(table(training[training[, delta] != 0, "TARGET"]))
+}
+```
+
+# Variables with zero variance
+
+```{r}
+nzv <- nearZeroVar(all_data, saveMetrics = TRUE, freqCut = (nrow(all_data) - 10)/10,uniqueCut = 1000/nrow(all_data))
+for(i in which(all_data)[, nzv[, "nzv"]]){
+  print(names(all_data)[i])
+  print()
+}
+```
+
+# var38, var30
+
+```{r}
+qplot(log(var38), data=dat_train)
+summary(dat_train$var38)
+
+qplot(saldo_var30, data=dat_train, col=as.factor(TARGET))
+qplot((num_var30_0), data=dat_train, col=as.factor(TARGET))
+```
+
+# hace2 and hace3
+
+```{r}
+qplot(log(var5_ratio), data=all_dat[all_dat$ID %in% dat_train$ID, ], col=as.factor(TARGET))
+qplot(var45_ratio, data=all_dat[all_dat$ID %in% dat_train$ID, ], fill=as.factor(TARGET))
+qplot(log(num_var45_hace3), data=all_dat)
+
+hist(all_dat$saldo_medio_var5_u)
+
+hist(rescale(all_dat$saldo_medio_var5_ult1 - all_dat$saldo_medio_var5_ult3) + 1)
+hist(log(all_dat$saldo_medio_var5))
+
+hist((rescale(all_dat$saldo_medio_var5_hace2 - all_dat$saldo_medio_var5_hace3) + 1))
+qplot(log(rescale(all_dat$saldo_medio_var8_hace2 - all_dat$saldo_medio_var8_hace3) + 1))
+hist(log((all_dat$num_var22_hace2 + 1)/(all_dat$num_var22_hace3 +1)))
+hist(log(rescale(all_dat$num_var22_ult1 - all_dat$num_var22_ult3 )))
+```
