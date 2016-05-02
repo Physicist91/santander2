@@ -75,9 +75,8 @@ preds <- predict(clf, newdata=test)
 #   
 #   preds_df <- cbind(preds_df, predict(clf, newdata= test))
 # }
+#preds <- rowMeans(preds_df[, -1])
 
-
-preds <- rowMeans(preds_df[, -1])
 preds[AGE < 23] <- 0
 preds[var36.0 == 1] <- 0
 preds[num_var13_largo_0 > 3] <- 0
