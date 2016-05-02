@@ -66,7 +66,7 @@ age_propensity <- tapply(dat_train$TARGET, dat_train$var15, mean)
 all_dat$age_propensity <- age_propensity[as.character(all_dat$var15)]
 all_dat[is.na(all_dat$age_propensity), "age_propensity"] <- 0
 
-# add k-nearest neighbor
+# add k-nearest neighbor as out-of-folds feature
 normalize <- function(x){
     num <- x - min(x)
     denom <- max(x) - min(x)
