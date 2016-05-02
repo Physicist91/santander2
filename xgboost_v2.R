@@ -14,6 +14,8 @@ dtrain <- xgb.DMatrix(data=train, label=y.train)
 
 AGE <- test$var15
 var36.0 <- test$var36.0
+num_var13_largo_0 <- test$num_var13_largo_0
+saldo_var33 <- test$saldo_var33
 ID.test <- test$ID
 test$ID <- NULL
 test <- sparse.model.matrix(TARGET ~. -1, data=test)
@@ -26,10 +28,9 @@ param <- list(objective = "binary:logistic",
                     nthread=2,
 			        eta=0.015,
 			        max_depth=5,
-			        colsample_bytree=0.5,
-			        min_child_weight=10,
-			        max_delta_step=5,
-			        subsample=1)
+			        colsample_bytree=0.6,
+			        min_child_weight=1,
+			        subsample=0.7)
 
 #Parameter values are obtained from cross-validation
 xgbcv <- xgb.cv(data = dtrain,
@@ -57,7 +58,8 @@ clf <- xgb.train(       params              = param,
                         verbose             = 2
 )
 importance_matrix <- xgb.importance(train@Dimnames[[2]],model= clf)
-importance_matrix[1:20,]
+xgb.plot.importance(importance_matrix[1:20,])
+importance_matrix[1:30,]
 
 preds_df <- data.frame(preds=rep(0, length(ID.test)))
 
@@ -77,7 +79,8 @@ for(z in 1:10){
 preds <- rowMeans(preds_df[, -1])
 preds[AGE < 23] <- 0
 preds[var36.0 == 1] <- 0
+preds[num_var13_largo_0 > 3] <- 0
+preds[saldo_var33 > 0] <- 0
 submission <- data.frame(ID = ID.test, TARGET = preds)
 
 write.csv(submission, "submission.csv", row.names = FALSE)
-
